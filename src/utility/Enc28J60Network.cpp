@@ -32,9 +32,14 @@ extern "C" {
 }
 
 // set CS to 0 = active
-#define CSACTIVE digitalWrite(csPin, LOW)
+//#define CSACTIVE digitalWrite(csPin, LOW)
 // set CS to 1 = passive
-#define CSPASSIVE digitalWrite(csPin, HIGH)
+//#define CSPASSIVE digitalWrite(csPin, HIGH)
+void setCSPin(uint8_t state);
+#define CSACTIVE setCSPin(LOW)
+// set CS to 1 = passive
+//#define CSPASSIVE digitalWrite(ENC28J60ControlCS, HIGH)
+#define CSPASSIVE setCSPin(HIGH)
 
 #define SPI_ETHERNET_SETTINGS SPISettings(20000000, MSBFIRST, SPI_MODE0)
 //
@@ -49,9 +54,11 @@ void Enc28J60Network::initSPI()
 {
   if (spiInitialized)
     return;
-  pinMode(csPin, OUTPUT);
+  //pinMode(csPin, OUTPUT);
   CSPASSIVE;
-  SPI.begin();
+  //SPI.begin();
+  SPI.begin(14, 12, 13);
+  Serial.println("Initialized SPI with 14, 12, 13");
   spiInitialized = true;
 }
 
